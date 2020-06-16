@@ -1,0 +1,77 @@
+﻿<Window x:Class="ProjectControlSystem.Windows.NewRequestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+        Title="Новая позиция" Height="167" Width="345" WindowStartupLocation="CenterOwner" ShowInTaskbar="True" Topmost="True" ShowActivated="True"
+        WindowStyle="ToolWindow" ResizeMode="NoResize">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="Деталь:" Margin="3" TextAlignment="Right"/>
+        <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" VerticalAlignment="Center"  Margin="3" IsEditable="True" Name="cmbDetail"/>
+            <Button Grid.Column="1" Margin="1" Name="btnClearDetaisList" ToolTip="Очистить сохранненный список деталей"
+                    Click="btnClearDetaisList_Click">
+                <Image Width="22" Height="22" Margin="-1" Source="/ProjectControlSystem;component/Images/garbage_empty.png"/>
+            </Button>
+        </Grid>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="Артикул:" Margin="3" TextAlignment="Right"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center"  Margin="3" TextAlignment="Center" Name="txtArticle"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="Количество:" Margin="3" TextAlignment="Right"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center"  Margin="3" TextAlignment="Center" Name="txtCount"/>
+
+        <Grid Grid.Row="4" Grid.ColumnSpan="3" VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="5" IsDefault="True"
+                Click="btnOk_Click">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0" Width="24" Height="24" Source="/ProjectControlSystem;component/Images/disk_blue.png"/>
+                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="5,0,0,0" Text="Сохранить"/>
+                </Grid>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5"  IsCancel="True"
+                     Click="btnClose_Click">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0" Width="24" Height="24" Source="/ProjectControlSystem;component/Images/delete2.png"/>
+                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="5,0" Text="Отмена"/>
+                </Grid>
+            </Button>
+        </Grid>
+
+
+
+    </Grid>
+</Window>

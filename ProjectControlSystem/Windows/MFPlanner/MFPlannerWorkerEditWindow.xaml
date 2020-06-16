@@ -1,0 +1,69 @@
+﻿<Window x:Class="ProjectControlSystem.Windows.MFPlanner.MFPlannerWorkerEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ProjectControlSystem" 
+        Title="Редактор работника" Height="232" Width="346" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" ResizeMode="NoResize" ShowInTaskbar="False">
+
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="3" Text="Id:"/>
+        <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="3" Text="" IsReadOnly="True" Name="txtId"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="3" Text="Пост:"/>
+        <TextBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="3" Text="" Name="txtPost"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="3" Text="Имя:"/>
+        <TextBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="3" Text="" Name="txtName"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="3" Text="Фамилия:"/>
+        <TextBox Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Margin="3" Text="" Name="txtSecondName"/>
+
+        <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="1"  VerticalAlignment="Center" Margin="5" Content="Уволен" Name="chkIsFired"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" Margin="3" Foreground="Gray" Text="дата увольнения" Name="txtFireDate"/>
+
+        <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="1" Grid.Column="0" Width="150" HorizontalAlignment="Right" Margin="5" IsDefault="True"
+                Click="btnSave_Click">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0" Width="24" Height="24" Source="/ProjectControlSystem;component/Images/disk_blue.png"/>
+                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="5,0,0,0" Text="Сохранить"/>
+                </Grid>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="1" Width="150" HorizontalAlignment="Left" Margin="5"  IsCancel="True">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0" Width="24" Height="24" Source="/ProjectControlSystem;component/Images/delete2.png"/>
+                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="5,0" Text="Отмена"/>
+                </Grid>
+            </Button>
+
+        </Grid>
+    </Grid>
+</Window>

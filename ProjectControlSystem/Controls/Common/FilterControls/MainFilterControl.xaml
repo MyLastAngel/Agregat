@@ -1,0 +1,248 @@
+﻿<UserControl x:Class="ProjectControlSystem.FilterControls.MainFilterControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"   
+             xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+             mc:Ignorable="d" >
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!--Основные настройки-->
+        <Border Grid.Row="0" Margin="2" BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Background="#4CD3D3D3">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Номер:" VerticalAlignment="Center" Margin="3"/>
+                <TextBox Grid.Column="1" Grid.Row="0" Name="txtID" VerticalAlignment="Center" Margin="3" HorizontalAlignment="Stretch"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Заказчик:" VerticalAlignment="Center" Margin="3"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Name="txtCustomer" VerticalAlignment="Center" Margin="3" HorizontalAlignment="Stretch"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Изделие:" VerticalAlignment="Center" Margin="3"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Name="txtProduct" VerticalAlignment="Center" Margin="3" HorizontalAlignment="Stretch"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="3" Text="Опции:" VerticalAlignment="Center" Margin="3"/>
+                <TextBox Grid.Column="1" Grid.Row="3" Name="txtOptions" VerticalAlignment="Center" Margin="3" HorizontalAlignment="Stretch"/>
+
+            </Grid>
+        </Border>
+
+        <!--Состояние-->
+        <Border Grid.Row="1" Margin="2" BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Background="#4CD3D3D3">
+            <Grid Grid.Row="0" Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <CheckBox Grid.Row="0" Grid.ColumnSpan="2" FontSize="11" Content="Состояние проекта" VerticalAlignment="Center" Margin="3,0" 
+                                                    Name="chkProject_State_Filter"/>
+
+                <Grid Grid.Row="1" Margin="20,2,0,2" HorizontalAlignment="Left"
+                                              IsEnabled="{Binding ElementName=chkProject_State_Filter, Path=IsChecked, Mode=OneWay}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <RadioButton Grid.Row="0" Name="radioProject_State_Complete" GroupName="groupProject_State" IsChecked="True" Content="Завершен"/>
+                    <RadioButton Grid.Row="1" Name="radioProject_State_Not_Complete" GroupName="groupProject_State" Content="В процессе"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!--Цвет-->
+        <Border Grid.Row="2" Margin="2" BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Background="#4CD3D3D3">
+            <Grid Grid.Row="0" Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <CheckBox Grid.Row="0" Grid.ColumnSpan="2" FontSize="11" Content="Цвет" VerticalAlignment="Center" Margin="3,0" 
+                          Name="chkProject_State_Color_Filter"/>
+
+                <Grid Grid.Row="1" Margin="20,2,0,2" HorizontalAlignment="Left"
+                                              IsEnabled="{Binding ElementName=chkProject_State_Color_Filter, Path=IsChecked, Mode=OneWay}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <CheckBox Grid.Row="0" Grid.ColumnSpan="2" FontSize="11" VerticalAlignment="Center" Margin="3,0" Name="chkProject_State_Color_Ok">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Rectangle Grid.Column="0" Width="33" Height="16" RadiusX="2" RadiusY="2" Stroke="Black" Margin="2"
+                                       Fill="#7D90EE90"/>
+                            <TextBlock Grid.Column="1" Margin="2" VerticalAlignment="Center" Text="Норма"/>
+                        </Grid>
+                    </CheckBox>
+
+                    <CheckBox Grid.Row="1" Grid.ColumnSpan="2" FontSize="11" VerticalAlignment="Center" Margin="3,0" Name="chkProject_State_Color_Warning">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Rectangle Grid.Column="0" Width="33" Height="16" RadiusX="2" RadiusY="2" Stroke="Black" Margin="2"
+                                       Fill="#7DD8E082"/>
+                            <TextBlock Grid.Column="1" Margin="2" VerticalAlignment="Center" Text="Внимание"/>
+                        </Grid>
+                    </CheckBox>
+
+                    <CheckBox Grid.Row="2" Grid.ColumnSpan="2" FontSize="11" VerticalAlignment="Center" Margin="3,0" Name="chkProject_State_Color_Error">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Rectangle Grid.Column="0" Width="33" Height="16" RadiusX="2" RadiusY="2" Stroke="Black" Margin="2"
+                                       Fill="#7DB26464"/>
+                            <TextBlock Grid.Column="1" Margin="2" VerticalAlignment="Center" Text="Ошибка"/>
+                        </Grid>
+                    </CheckBox>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!--Дата отгрузки (факт)-->
+        <Border Grid.Row="3" Margin="2" BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Background="#4CD3D3D3">
+            <Grid Grid.Row="5" Grid.ColumnSpan="2"  Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <CheckBox Grid.Row="0" Grid.ColumnSpan="2" FontSize="11" Content="Дата отгрузки (факт)" VerticalAlignment="Center" 
+                                          Margin="3,0" Name="chkCOM_End_Time"/>
+
+                <Grid Grid.Row="1" Margin="20,2,0,2" IsEnabled="{Binding ElementName=chkCOM_End_Time, Path=IsChecked, Mode=OneWay}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <RadioButton Grid.Row="0" Content="Не установлена" Name="radioCOM_End_Time_Not_Set" GroupName="radioCOM_End_Time" IsChecked="True"/>
+
+                    <RadioButton Grid.Row="1" Content="Установлена" Name="radioCOM_End_Time_Set" GroupName="radioCOM_End_Time"/>
+
+                    <Grid Grid.Row="2" Margin="10,2,0,2" HorizontalAlignment="Left" IsEnabled="{Binding ElementName=radioCOM_End_Time_Set, Path=IsChecked, Mode=OneWay}">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="c:" VerticalAlignment="Center" Margin="3,0" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" Margin="3,0" Foreground="#FF0072FF" Cursor="Hand" VerticalAlignment="Center" TextAlignment="Center" 
+                                   Name="txtEnd_Time_From" Text="18/12/2014"
+                                   MouseLeftButtonDown="txtTime_MouseLeftButtonDown"/>
+
+                        <TextBlock Grid.Column="2" Grid.Row="2" Text="по:" VerticalAlignment="Center" Margin="3" TextAlignment="Right"/>
+                        <TextBlock Grid.Column="3" Grid.Row="2" Margin="3,0" Foreground="#FF0072FF" Cursor="Hand" VerticalAlignment="Center"   TextAlignment="Center" 
+                                   Name="txtEnd_Time_To" Text="18/12/2014"
+                                   MouseLeftButtonDown="txtTime_MouseLeftButtonDown"/>
+
+                    </Grid>
+
+
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!--Долги электрика-->
+        <Border Grid.Row="4" Margin="2" BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Background="#4CD3D3D3">
+            <Grid Grid.Row="0" Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <CheckBox Grid.Row="0" Grid.ColumnSpan="2" FontSize="11" Content="Долги по электрике" VerticalAlignment="Center" Margin="3,0" 
+                                                    Name="chkDebt_E_State_Filter"/>
+
+                <Grid Grid.Row="1" Margin="20,2,0,2" HorizontalAlignment="Left"
+                                              IsEnabled="{Binding ElementName=chkDebt_E_State_Filter, Path=IsChecked, Mode=OneWay}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <RadioButton Grid.Row="0" Name="radioDebt_E_Exist" GroupName="groupDebt_E_State" IsChecked="True" Content="Есть"/>
+                    <RadioButton Grid.Row="1" Name="radioDebt_E_Not_Exist" GroupName="groupDebt_E_State" Content="Нет"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!--Долги гидравлике-->
+        <Border Grid.Row="5" Margin="2" BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Background="#4CD3D3D3">
+            <Grid Grid.Row="0" Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <CheckBox Grid.Row="0" Grid.ColumnSpan="2" FontSize="11" Content="Долги по гидравлике" VerticalAlignment="Center" Margin="3,0" 
+                                                    Name="chkDebt_G_State_Filter"/>
+
+                <Grid Grid.Row="1" Margin="20,2,0,2" HorizontalAlignment="Left"
+                                              IsEnabled="{Binding ElementName=chkDebt_G_State_Filter, Path=IsChecked, Mode=OneWay}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <RadioButton Grid.Row="0" Name="radioDebt_G_Exist" GroupName="groupDebt_G_State" IsChecked="True" Content="Есть"/>
+                    <RadioButton Grid.Row="1" Name="radioDebt_G_Not_Exist" GroupName="groupDebt_G_State" Content="Нет"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Popup Name="popupCalendar" Placement="Center" StaysOpen="False">
+            <Popup.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/Resources/CalendarResources.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </Popup.Resources>
+
+            <Grid Background="White">
+                <toolkit:Calendar Name="calendar" Margin="1" CalendarItemStyle="{StaticResource NewStyle}" Focusable="False" 
+                                  SelectionMode="SingleDate" SelectedDatesChanged="calendar_SelectedDatesChanged" />
+            </Grid>
+
+        </Popup>
+    </Grid>
+
+</UserControl>

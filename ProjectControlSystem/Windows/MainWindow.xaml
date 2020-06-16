@@ -1,0 +1,444 @@
+﻿<Window x:Class="ProjectControlSystem.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:avalon="clr-namespace:AvalonDock;assembly=AvalonDock"
+        xmlns:avalonDock="http://avalondock.codeplex.com"
+        xmlns:avalonControls="http://schemas.AvalonControls/AvalonControlsLibrary/Controls"
+        xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+        xmlns:local="clr-namespace:ProjectControlSystem" 
+        xmlns:controls="clr-namespace:ProjectControlSystem.Controls"
+        Title="Система управления проектами" Height="350" Width="1298.52"  WindowStartupLocation="CenterScreen" Icon="/ProjectControlSystem;component/Images/logo.ico" >
+
+    <Window.Resources>
+        <local:ViewModeToBoolConverter x:Key="ViewModeToBoolConverter"/>
+        <local:UserToEditBitmapSourceConverter x:Key="UserToEditBitmapSourceConverter "/>
+        <local:DateTimeConverter x:Key="DateTimeConverter"/>
+        <local:FilterToBitmapSourceConverter x:Key="FilterToBitmapSourceConverter"/>
+        <local:OnlineToBackgroundConverter x:Key="OnlineToBackgroundConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!--Заголовок-->
+        <Grid Grid.Row="0" Grid.ColumnSpan="3" Background="DarkGray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" DockPanel.Dock="Top" >
+                <MenuItem Header="Программа">
+                    <MenuItem Header="Открыть новое окно" 
+                              Click="btnOpenMain_Click">
+                        <MenuItem.Icon>
+                            <Image Width="18" Height="18" Source="/ProjectControlSystem;component/Images/newWin.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator/>
+
+                    <MenuItem Header="Создать проект" 
+                              Click="btnAdd_Click">
+                        <MenuItem.Icon>
+                            <Image Width="24" Height="24" Source="/ProjectControlSystem;component/Images/index_add.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem Header="Загрузить проекты" 
+                              Click="btnUpdate_Click">
+                        <MenuItem.Icon>
+                            <Image Width="24" Height="24" Source="/ProjectControlSystem;component/Images/index_refresh.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator/>
+
+                    <MenuItem Header="Импорт в Excel" 
+                              Click="btnToExcel_Click">
+                        <MenuItem.Icon>
+                            <Image Width="24" Height="24" Source="/ProjectControlSystem;component/Images/excel_save.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator/>
+
+                    <MenuItem Header="Завершить программу" 
+                              Click="btnClose_Click">
+                        <MenuItem.Icon>
+                            <Image Width="24" Height="24" Source="/ProjectControlSystem;component/Images/quit.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+
+                <MenuItem Header="Вид">
+                    <MenuItem Header="Главное меню" IsCheckable="True" IsChecked="{Binding Path=ViewMode, ConverterParameter=1, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}"/>
+
+                    <Separator/>
+
+                    <MenuItem Header="Коммерческий отдел" IsCheckable="True" IsChecked="{Binding Path=ViewMode, ConverterParameter=2, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}"/>
+                    <MenuItem Header="Инженерно Технический Отдел" IsCheckable="True" IsChecked="{Binding Path=ViewMode, ConverterParameter=4, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}"/>
+                    <MenuItem Header="Склад" IsCheckable="True" IsChecked="{Binding Path=ViewMode, ConverterParameter=8, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}"/>
+                    <MenuItem Header="Отдел Снабжения" IsCheckable="True" IsChecked="{Binding Path=ViewMode, ConverterParameter=16, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}"/>
+                    <MenuItem Header="Производство" IsCheckable="True" IsChecked="{Binding Path=ViewMode, ConverterParameter=32, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}"/>
+                    <MenuItem Header="Отдел Технического Контроля" IsCheckable="True" IsChecked="{Binding Path=ViewMode, ConverterParameter=64, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}"/>
+
+                </MenuItem>
+
+                <MenuItem Header="Сервис">
+                    <MenuItem Header="Конфигурация" 
+                              Click="btnConfiguration_Click">
+                        <MenuItem.Icon>
+                            <Image Width="24" Height="24" Source="/ProjectControlSystem;component/Images/preferences.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+
+                <MenuItem Header="Свойства">
+                    <MenuItem Header="О программе" 
+                              Click="btnAbout_Click">
+                        <MenuItem.Icon>
+                            <Image Width="18" Height="18" Source="/ProjectControlSystem;component/Images/about2.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem Header="Лог событий" 
+                              Click="btnLog_Click">
+                        <MenuItem.Icon>
+                            <Image Width="18" Height="18" Source="/ProjectControlSystem;component/Images/log.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator/>
+
+                    <MenuItem Header="Помощь" 
+                              Click="btnHelp_Click">
+                        <MenuItem.Icon>
+                            <Image Width="18" Height="18" Source="/ProjectControlSystem;component/Images/help.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+
+            <ToolBarTray Grid.Row="1" Grid.Column="0" Background="DarkGray" >
+                <ToolBar x:Name="barAdmin" Margin="1"  VerticalAlignment="Stretch">
+
+                    <Button Margin="1" ToolTip="Добавить новый проект"
+                            Click="btnAdd_Click">
+                        <local:GreyableImage Source="/ProjectControlSystem;component/Images/index_add.png" Margin="-2"  Width="32" Height="32" />
+                    </Button>
+
+                    <Button Margin="3" ToolTip="Загрузить из файла"
+                            Click="btnAddFile_Click">
+                        <local:GreyableImage Source="/ProjectControlSystem;component/Images/index_up.png" Margin="-2"  Width="32" Height="32" />
+                    </Button>
+
+                    <Separator />
+
+                    <Button Margin="3" ToolTip="Загрузить проекты"
+                            Click="btnUpdate_Click">
+                        <local:GreyableImage Source="/ProjectControlSystem;component/Images/index_refresh.png" Margin="-2"  Width="32" Height="32" />
+                    </Button>
+
+                    <Separator Name="sepAdmin" Visibility="Collapsed"/>
+
+                    <Button Margin="3" ToolTip="Редактировать выбранный проект" Name="mnuEdit" Visibility="Collapsed"
+                            Click="btnEdit_Click">
+                        <local:GreyableImage Source="/ProjectControlSystem;component/Images/index_replace.png" Margin="-2"  Width="32" Height="32" />
+                    </Button>
+
+
+                    <Button Margin="3" ToolTip="Удалить выбранный проект" Name="mnuRemove" Visibility="Collapsed"
+                            Click="btnRemove_Click">
+                        <local:GreyableImage Source="/ProjectControlSystem;component/Images/index_delete.png" Margin="-2"  Width="32" Height="32" />
+                    </Button>
+
+                    <Separator/>
+
+                    <Button Margin="3" ToolTip="Отмена последнего действия"
+                            Click="btnRevert_Click">
+                        <local:GreyableImage Source="/ProjectControlSystem;component/Images/revert.png" Margin="-2"  Width="32" Height="32" />
+                    </Button>
+
+
+                    <Button Margin="3" ToolTip="Сохранить в Excel"
+                            Click="btnToExcel_Click">
+                        <local:GreyableImage Source="/ProjectControlSystem;component/Images/excel_save.png" Margin="-2"  Width="32" Height="32" />
+                    </Button>
+
+                    <Button Margin="3" ToolTip="Сохранить проект в Excel"
+                            Click="btnProjectToExcel_Click">
+                        <local:GreyableImage Source="/ProjectControlSystem;component/Images/excel_project.png" Margin="-2"  Width="32" Height="32" />
+                    </Button>
+
+                    <Separator/>
+
+                    <CheckBox Margin="3" Name="btnFilter" ToolTip="Показать/Скрыть окно Фильтра"
+                              Click="btnFilter_Click">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition  />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.Column="0"  Width="32" Height="32" Margin="-2"  
+                                   Source="{Binding ElementName=controlFilter, Path=IsFilterSet, Converter={StaticResource FilterToBitmapSourceConverter}, Mode=OneWay}"/>
+
+                            <TextBlock Grid.Column="1" FontSize="10"  VerticalAlignment="Center" Text="Фильтр" Width="50" TextWrapping="Wrap" Margin="2" TextAlignment="Center"/>
+                        </Grid>
+                    </CheckBox>
+
+                    <Separator />
+                    
+                    <Button Margin="3" ToolTip="Планирование производства" Name="mnuMFPlaner" Visibility="Collapsed"
+                            Click="btnManufacturePlanner_Click">
+                        <local:GreyableImage Source="/ProjectControlSystem;component/Images/window_time.png" Margin="-2"  Width="32" Height="32" />
+                    </Button>
+                    <Button Margin="3" ToolTip="Список работников для планирования производства" Name="mnuMFPlanerWorkers" Visibility="Collapsed"
+                            Click="btnmnuMFPlanerWorkers_Click">
+                        <local:GreyableImage Source="/ProjectControlSystem;component/Images/window_worker.png" Margin="-2"  Width="32" Height="32" />
+                    </Button>
+                </ToolBar>
+
+                <ToolBar x:Name="barRegistration" Margin="1"  >
+                    <Button Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" Height="48" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0"
+                    Click="btnLogin_Click">
+                        <Grid  Margin="1" VerticalAlignment="Center" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <local:GreyableImage Grid.Column="0" Grid.RowSpan="2" Width="32" Height="32"  Source="/ProjectControlSystem;component/Images/worker.png" Margin="5,-1" />
+
+                            <TextBlock Grid.Column="1" Grid.Row="0" Margin="-2" VerticalAlignment="Center" Text="{Binding Path=CurentUserName, Mode=OneWay}" Foreground="#FF1277BD" FontSize="16" 
+                               TextAlignment="Center" FontWeight="Bold" />
+                            <TextBlock Grid.Column="1" Grid.Row="1" Margin="-2"  VerticalAlignment="Center" Text="{Binding Path=CurentUserGroup, Mode=OneWay}" FontSize="10" TextAlignment="Center" 
+                               Foreground="Gray" FontWeight="Black" TextWrapping="Wrap"/>
+                        </Grid>
+                    </Button>
+                </ToolBar>
+
+                <ToolBar x:Name="barNavigation" Margin="1"  VerticalAlignment="Center">
+
+                    <CheckBox Margin="3" IsChecked="{Binding Path=ViewMode, ConverterParameter=1, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}" 
+                              Cursor="Hand">
+                        <Grid>
+                            <!--<Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>-->
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition  />
+                            </Grid.ColumnDefinitions>
+
+                            <local:GreyableImage Grid.Row="0" Grid.Column="0"  Width="32" Height="32" Source="/ProjectControlSystem;component/Images/home.png" Margin="-2"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" FontSize="10"  VerticalAlignment="Center" Text="Главное меню" Width="50" TextWrapping="Wrap" Margin="2" TextAlignment="Center"/>
+                        </Grid>
+                    </CheckBox>
+
+                    <Separator/>
+
+                    <CheckBox Margin="3"  IsChecked="{Binding Path=ViewMode, ConverterParameter=2, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition  />
+                            </Grid.ColumnDefinitions>
+
+                            <local:GreyableImage Grid.Column="0"  Width="32" Height="32" Margin="-2"
+                                                  Source="{Binding Path=CurentUserName, ConverterParameter=2, Converter={StaticResource UserToEditBitmapSourceConverter}, Mode=OneWay}"/>
+                            <TextBlock Grid.Column="1" FontSize="10"  VerticalAlignment="Center" Text="Коммерческий отдел" Width="70" TextWrapping="Wrap" Margin="2" TextAlignment="Center"/>
+                        </Grid>
+                    </CheckBox>
+
+                    <CheckBox Margin="3"  IsChecked="{Binding Path=ViewMode, ConverterParameter=4, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition  />
+                            </Grid.ColumnDefinitions>
+
+                            <local:GreyableImage Grid.Column="0"  Width="32" Height="32"  Margin="-2"
+                                                  Source="{Binding Path=CurentUserName, ConverterParameter=4, Converter={StaticResource UserToEditBitmapSourceConverter}, Mode=OneWay}"/>
+                            <TextBlock Grid.Column="1" FontSize="10"  VerticalAlignment="Center" Text="Инженерно Технический Отдел" Width="60" TextWrapping="Wrap" Margin="2" TextAlignment="Center"/>
+                        </Grid>
+                    </CheckBox>
+
+                    <CheckBox Margin="3"  IsChecked="{Binding Path=ViewMode, ConverterParameter=8, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition  />
+                            </Grid.ColumnDefinitions>
+
+                            <local:GreyableImage Grid.Column="0"  Width="32" Height="32"  Margin="-2"
+                                                  Source="{Binding Path=CurentUserName, ConverterParameter=8, Converter={StaticResource UserToEditBitmapSourceConverter}, Mode=OneWay}"/>
+                            <TextBlock Grid.Column="1" FontSize="10"  VerticalAlignment="Center" Text="Склад" Width="60" TextWrapping="Wrap" Margin="2" TextAlignment="Center"/>
+                        </Grid>
+                    </CheckBox>
+
+                    <CheckBox Margin="3"  IsChecked="{Binding Path=ViewMode, ConverterParameter=16, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition  />
+                            </Grid.ColumnDefinitions>
+
+                            <local:GreyableImage Grid.Column="0"  Width="32" Height="32"  Margin="-2"
+                                                  Source="{Binding Path=CurentUserName, ConverterParameter=16, Converter={StaticResource UserToEditBitmapSourceConverter}, Mode=OneWay}"/>
+                            <TextBlock Grid.Column="1" FontSize="10"  VerticalAlignment="Center" Text="Отдел Снабжения" Width="60" TextWrapping="Wrap" Margin="5,2" TextAlignment="Center"/>
+                        </Grid>
+                    </CheckBox>
+
+                    <CheckBox Margin="3"  IsChecked="{Binding Path=ViewMode, ConverterParameter=32, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition  />
+                            </Grid.ColumnDefinitions>
+
+                            <local:GreyableImage Grid.Column="0"  Width="32" Height="32"  Margin="-2"
+                                                  Source="{Binding Path=CurentUserName, ConverterParameter=32, Converter={StaticResource UserToEditBitmapSourceConverter}, Mode=OneWay}"/>
+                            <TextBlock Grid.Column="1" FontSize="10"  VerticalAlignment="Center" Text="Производство" Width="70" TextWrapping="Wrap" Margin="2" TextAlignment="Center"/>
+                        </Grid>
+                    </CheckBox>
+
+                    <CheckBox Margin="3"  IsChecked="{Binding Path=ViewMode, ConverterParameter=64, Converter={StaticResource ViewModeToBoolConverter}, Mode=TwoWay}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition  />
+                            </Grid.ColumnDefinitions>
+
+                            <local:GreyableImage Grid.Column="0"  Width="32" Height="32"  Margin="-2"
+                                                  Source="{Binding Path=CurentUserName, ConverterParameter=64, Converter={StaticResource UserToEditBitmapSourceConverter}, Mode=OneWay}"/>
+                            <TextBlock Grid.Column="1" FontSize="10"  VerticalAlignment="Center" Text="ОТК" Width="60" TextWrapping="Wrap" Margin="2" TextAlignment="Center"/>
+                        </Grid>
+                    </CheckBox>
+                </ToolBar>
+            </ToolBarTray>
+
+
+
+        </Grid>
+
+        <!--Фильтр-->
+        <controls:FilterControl x:Name="controlFilter" Grid.Column="0" Grid.Row="1" Visibility="Collapsed" Width="300"/>
+
+        <!--Фильтры разделитель-->
+        <!--<GridSplitter Grid.Row="1" Grid.Column="1" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="LightGray" Margin="0,5"/>-->
+
+        <Grid Grid.Row="1" Grid.Column="2" >
+            <Grid.RowDefinitions>
+                <RowDefinition MinHeight="100"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="100" MinHeight="100" />
+            </Grid.RowDefinitions>
+
+            <!--Данные-->
+            <ContentControl Grid.Row="0" Name="panelContent" Margin="3" />
+            <!--Данные Разделитель-->
+            <GridSplitter Grid.Row="1"  Grid.ColumnSpan="2" Name="splitter" Height="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="LightGray" Margin="5,0"/>
+
+            <local:MessagessControl Grid.Row="2" x:Name="messagess"
+                                    SelectedChanged="msgControl_SelectedChanged"/>
+
+        </Grid>
+
+
+        <!--    <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition  MinHeight="100"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+
+           <ContentControl  Grid.Row="0" Name="panelContent" Margin="3" />
+
+            <GridSplitter Grid.Row="1" Height="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="DarkGray" Margin="5,0"/>
+
+            <toolkit:DataGrid Grid.Row="2" Name="listEvents" AutoGenerateColumns="False" AlternatingRowBackground="#DBFFFF" CanUserAddRows="False"
+                              CanUserDeleteRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False" IsReadOnly="True"
+                              HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" Background="White" Margin="3"
+                              CanUserResizeRows="False" RowHeaderWidth="0" SelectionMode="Single" SelectionUnit="FullRow">
+
+                <toolkit:DataGrid.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceDictionary Source="/Resources/DataGridResources.xaml"/>
+                        </ResourceDictionary.MergedDictionaries>
+                    </ResourceDictionary>
+                </toolkit:DataGrid.Resources>
+
+                <toolkit:DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Перейти к проекту"
+                                  Click="mnuSelectProject_Click">
+                            <MenuItem.Icon>
+                                <Image Width="20" Height="20" Source="/ProjectControlSystem;component/Images/clipboard_next.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </toolkit:DataGrid.ContextMenu>
+
+                <toolkit:DataGrid.Columns>
+                    <toolkit:DataGridTextColumn Header="Дата" Binding="{Binding Path=Date,Converter={StaticResource  DateTimeConverter}, Mode=OneWay}" MinWidth="150"/>
+                    <toolkit:DataGridTextColumn Header="ID Проекта" Binding="{Binding Path=Id, Mode=OneWay}" MinWidth="150"/>
+                    <toolkit:DataGridTextColumn Header="Сообщение" Binding="{Binding Path=Message, Mode=OneWay}" Width="auto" MinWidth="1000"/>
+                </toolkit:DataGrid.Columns>
+
+            </toolkit:DataGrid>
+        </Grid>-->
+
+
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="3" >
+
+            <StatusBarItem HorizontalAlignment="Right">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ProgressBar Grid.Column="1" Name="progress"  Width="200" Minimum="0" Maximum="100" Margin="5,0" Visibility="Collapsed"/>
+                    <TextBlock Grid.Column="1" Name="statusText" Text="" Margin="3" VerticalAlignment="Center" TextAlignment="Center" Visibility="Collapsed"/>
+
+                    <Rectangle Grid.Column="2" Width="25" Margin="3" Height="18" RadiusX="5" RadiusY="5" Stroke="Gray">
+                        <Rectangle.Fill>
+                            <RadialGradientBrush GradientOrigin="0,0" RadiusX="0.5" RadiusY="0.5">
+                                <GradientStop Color="White" />
+                                <GradientStop Color="{Binding Path=IsConnected, Converter={StaticResource OnlineToBackgroundConverter}}" Offset="1" />
+                                <GradientStop Color="White" />
+                            </RadialGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Grid>
+
+
+            </StatusBarItem>
+
+        </StatusBar>
+    </Grid>
+
+
+</Window>

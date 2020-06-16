@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="ProjectControlSystem.MessagessControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+             xmlns:local="clr-namespace:ProjectControlSystem"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <local:FullDateTimeConverter x:Key="FullDateTimeConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <local:CustomDataGrid Grid.Row="2" x:Name="listEvents" AutoGenerateColumns="False" AlternatingRowBackground="#DBFFFF" CanUserAddRows="False"
+                              CanUserDeleteRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False" IsReadOnly="True"
+                              HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" Background="White" Margin="3" 
+                              CanUserResizeRows="False" RowHeaderWidth="0" SelectionMode="Single" SelectionUnit="FullRow">
+
+            <local:CustomDataGrid.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/Resources/DataGridResources.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </local:CustomDataGrid.Resources>
+
+            <local:CustomDataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Перейти к проекту"
+                                  Click="mnuSelectProject_Click">
+                        <MenuItem.Icon>
+                            <Image Width="20" Height="20" Source="/ProjectControlSystem;component/Images/clipboard_next.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator/>
+                    
+                    <MenuItem Header="Очистить список"
+                                  Click="mnuClear_Click">
+                        <MenuItem.Icon>
+                            <Image Width="20" Height="20" Source="/ProjectControlSystem;component/Images/garbage_empty.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </local:CustomDataGrid.ContextMenu>
+
+            <toolkit:DataGrid.Columns>
+                <toolkit:DataGridTextColumn Header="Дата" Binding="{Binding Path=Date,Converter={StaticResource  FullDateTimeConverter}, Mode=OneWay}" MinWidth="150"/>
+                <toolkit:DataGridTextColumn Header="ID Проекта" Binding="{Binding Path=ProjectID, Mode=OneWay}" MinWidth="150"/>
+                <toolkit:DataGridTextColumn Header="Сообщение" Binding="{Binding Path=Message, Mode=OneWay}" Width="auto" MinWidth="1000"/>
+            </toolkit:DataGrid.Columns>
+
+        </local:CustomDataGrid>
+    </Grid>
+</UserControl>

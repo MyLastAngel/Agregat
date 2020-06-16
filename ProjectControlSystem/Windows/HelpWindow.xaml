@@ -1,0 +1,8 @@
+﻿<Window x:Class="ProjectControlSystem.Windows.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Помощь по программе менеджер управления проектами" Height="480" Width="600" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+    <WebBrowser Name="browserDocument">
+        
+    </WebBrowser>
+</Window>

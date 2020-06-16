@@ -1,0 +1,187 @@
+﻿<Window x:Class="ProjectControlSystem.Windows.ConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ProjectControlSystem"
+        Title="Конфигурация" Height="402.162" Width="563.514" ShowInTaskbar="False" Topmost="True" ShowActivated="True"
+        WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+    <Grid Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition  />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <!--Кнопки применить-->
+        <Grid Grid.Row="1" Margin="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="100*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="3" Margin="3" MinWidth="150" IsDefault="True"
+                    Click="btnOk_Click">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0" Width="24" Height="24" VerticalAlignment="Center" Source="/ProjectControlSystem;component/Images/disk_blue.png" />
+                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="3" Text="Сохранить"/>
+                </Grid>
+            </Button>
+            <Button Grid.Column="4" Margin="3" MinWidth="150" IsCancel="True"
+                    Click="btnCancel_Click">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0" Width="24" Height="24" VerticalAlignment="Center" Source="/ProjectControlSystem;component/Images/delete2.png" />
+                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="3" Text="Отмена"/>
+                </Grid>
+            </Button>
+
+        </Grid>
+
+
+        <TabControl Grid.ColumnSpan="3" TabStripPlacement="Left" Margin="3">
+
+            <TabItem Header="Программа" >
+                <TabItem.Resources>
+                    <Style TargetType="Rectangle">
+                        <Setter Property="Margin" Value="3"/>
+                        <Setter Property="RadiusX" Value="2"/>
+                        <Setter Property="RadiusY" Value="2"/>
+                        <Setter Property="Stroke" Value="Black"/>
+                        <Setter Property="SnapsToDevicePixels" Value="True"/>
+                        <Setter Property="Width" Value="33"/>
+                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                    </Style>
+                </TabItem.Resources>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Vertical" Margin="3">
+
+                        <!--Основное-->
+                        <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="3" Margin="3">
+                            <Expander IsExpanded="True" Margin="3" Header="Основное">
+                                <Grid >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="Сервер*:" Margin="3"/>
+                                    <TextBox Grid.Column="1" Grid.Row="0" Name="txtAddress" VerticalAlignment="Center" Margin="3" TextAlignment="Center"/>
+                                    <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Text="* Вступит в силу после перезагрузки программы" FontSize="9"
+                                             TextAlignment="Center" Foreground="Gray"/>
+
+                                    <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Text="Загружать за:" TextWrapping="Wrap"/>
+                                    <TextBox Grid.Column="1" Grid.Row="2" Name="txtReadDays" VerticalAlignment="Center" Margin="3" TextAlignment="Center"/>
+                                    <TextBlock Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" VerticalAlignment="Center" Text="Загружать все проекты за заданный период в сутках" FontSize="9"
+                                             TextAlignment="Center" Foreground="Gray"/>
+
+                                    <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Text="Перечитывать:" TextWrapping="Wrap"/>
+                                    <TextBox Grid.Column="1" Grid.Row="4" Name="txtUpdateTimeSec" VerticalAlignment="Center" Margin="3" TextAlignment="Center"/>
+                                    <TextBlock Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" VerticalAlignment="Center" Text="Время проверки обновлений на сервере в секундах (максимум 10 минут)" FontSize="9"
+                                             TextAlignment="Center" Foreground="Gray"/>
+
+                                    <CheckBox Grid.Column="1" Grid.Row="6" Margin="5" Content="Отображать панель сообщений" Name="cmbIsShowMessageMenu"/>
+
+                                </Grid>
+                            </Expander>
+                        </Border>
+
+                        <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="3" Margin="3">
+                            <Expander IsExpanded="True" Margin="3" Header="Оповещения">
+                                <Grid >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="Время скрытия окна оповещений (мин):" Width="120" 
+                                               TextAlignment="Left" TextWrapping="Wrap"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Name="txtAlertShowTimeMin" Margin="3"/>
+
+                                    <CheckBox Grid.Row="1" Grid.Column="1" Margin="3" Name="chkIsHideAlertWin" Content="Скрывать окно оповещения по таймеру"/>
+
+                                </Grid>
+                            </Expander>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Импорт в Excel" >
+                <TabItem.Resources>
+                    <Style TargetType="Rectangle">
+                        <Setter Property="Margin" Value="3"/>
+                        <Setter Property="RadiusX" Value="2"/>
+                        <Setter Property="RadiusY" Value="2"/>
+                        <Setter Property="Stroke" Value="Black"/>
+                        <Setter Property="SnapsToDevicePixels" Value="True"/>
+                        <Setter Property="Width" Value="33"/>
+                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                    </Style>
+                </TabItem.Resources>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Vertical" Margin="3">
+
+                        <!--Основное-->
+                        <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="3" Margin="3">
+                            <Expander IsExpanded="True" Margin="3" Header="Основное">
+                                <Grid >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <CheckBox Grid.Column="1" Grid.Row="6" Margin="5" Content="Сохранять цвета главного окна при импорте в Excel" Name="cmbIsEnableColorsOnMainImportToExcel"/>
+
+
+                                </Grid>
+                            </Expander>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+
+</Window>

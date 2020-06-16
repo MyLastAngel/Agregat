@@ -1,0 +1,560 @@
+﻿<UserControl x:Class="ProjectControlSystem.Controls.WarehouseControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+             xmlns:local="clr-namespace:ProjectControlSystem"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="1900">
+
+    <UserControl.Resources>
+        <local:DateTimeConverter x:Key="DateTimeConverter"/>
+        <local:StateToBitmapSourceConverter x:Key="StateToBitmapSourceConverter"/>
+        <local:NullToVisibleSourceConverter x:Key="NullToVisibleSourceConverter"/>
+        <local:NullDateTimeToFalseConverter x:Key="NullDateTimeToFalseConverter"/>
+        <local:UserToBoolConverter x:Key="UserToBoolConverter"/>
+        <local:RequestToVisibilityConverter x:Key="RequestToVisibilityConverter"/>
+
+        <local:RequestToBrushConverter x:Key="RequestToBrushConverter"/>
+        <local:NotNeedDateTimeConverter x:Key="NotNeedDateTimeConverter"/>
+        <local:NullDateTimeToCollapseConverter x:Key="NullDateTimeToCollapseConverter"/>
+
+        <local:IsManagerSetPlanDateToBrushSourceConverter x:Key="IsManagerSetPlanDateToBrushSourceConverter"/>
+        <local:TimePlanStateToVisibilityConverter x:Key="TimePlanStateToVisibilityConverter"/>
+
+    </UserControl.Resources>
+
+    <Grid Background="White">
+
+        <local:CustomDataGrid Grid.Row="1" x:Name="listProjects" AutoGenerateColumns="False" AlternatingRowBackground="#4CD3D3D3" CanUserAddRows="False"
+                              CanUserDeleteRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False"
+                              HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" Background="White"
+                              CanUserResizeRows="False" RowHeaderWidth="0" SelectionMode="Single" SelectionUnit="FullRow"
+                              EnableColumnVirtualization="False" EnableRowVirtualization="True"
+                              SourceUpdated="listProjects_SourceUpdated">
+
+            <local:CustomDataGrid.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/Resources/DataGridResources.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </local:CustomDataGrid.Resources>
+
+            <local:CustomDataGrid.Columns>
+                <!--№ Проекта-->
+                <toolkit:DataGridTextColumn Header="№" Binding="{Binding Path=ID, Mode=OneWay}" IsReadOnly="True" 
+                                            FontSize="18" FontWeight="Black" MinWidth="50" 
+                                            CellStyle="{ StaticResource styleCellConst}" HeaderStyle="{ StaticResource styleHeaderConst}"/>
+
+                <!--Контрагент-->
+                <toolkit:DataGridTemplateColumn Header="Контрагент" CellStyle="{ StaticResource styleCellConst}" HeaderStyle="{ StaticResource styleHeaderConst}" Width="120" CanUserSort="True" SortMemberPath="Customer">
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Grid.Row="2" Text="{Binding Path=Customer, Mode=OneWay}" HorizontalAlignment="Stretch" TextAlignment="Center" 
+                                               MaxWidth="120" VerticalAlignment="Center" TextWrapping="Wrap" Margin="3,0" FontSize="11" FontWeight="Black"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Проект-->
+                <toolkit:DataGridTemplateColumn Header="Проект" CellStyle="{ StaticResource styleCellConst}" HeaderStyle="{ StaticResource styleHeaderConst}" Width="120" CanUserSort="True" SortMemberPath="CustomerName">
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Grid.Row="2" Text="{Binding Path=CustomerName, Mode=OneWay}" HorizontalAlignment="Stretch" TextAlignment="Center" 
+                                               MaxWidth="120" VerticalAlignment="Center" TextWrapping="Wrap" Margin="3,0" FontSize="11" FontWeight="Black"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Изделие-->
+                <toolkit:DataGridTemplateColumn Header="Изделие" CellStyle="{ StaticResource styleCellConst}" HeaderStyle="{ StaticResource styleHeaderConst}" Width="150" CanUserSort="True" SortMemberPath="Product">
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Grid.Row="2" Text="{Binding Path=Product, Mode=OneWay}" HorizontalAlignment="Stretch" TextAlignment="Center" 
+                                               MaxWidth="150" VerticalAlignment="Center" TextWrapping="Wrap" Margin="3,0" FontSize="11" FontWeight="Black"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Опции-->
+                <toolkit:DataGridTemplateColumn Header="Опции" CellStyle="{ StaticResource styleCellConst}" HeaderStyle="{ StaticResource styleHeaderConst}" CanUserSort="True" SortMemberPath="Options">
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Grid.Row="2" Text="{Binding Path=Options, Mode=OneWay}" HorizontalAlignment="Stretch" TextAlignment="Center" MaxWidth="150" VerticalAlignment="Center" TextWrapping="Wrap" Margin="3,0" FontSize="11"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Гидравлические (план)-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="110" CanUserSort="True" SortMemberPath="Time_WH_G_Plan">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Гидравлика (план)" TextWrapping="Wrap" TextAlignment="Center" Width="100" />
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid IsEnabled="{Binding Path=CurrentUser, Converter={StaticResource UserToBoolConverter}, ConverterParameter=8, Mode=OneWay}">
+                                <TextBlock Width="90" TextAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock.Visibility>
+                                        <MultiBinding Converter="{StaticResource TimePlanStateToVisibilityConverter}" ConverterParameter="invert">
+                                            <Binding Path="IsManagerSetPlanDate" Mode="OneWay"/>
+                                            <Binding Path="Is_WH_G_NotNeed" Mode="OneWay"/>
+                                            <Binding Path="Time_WH_G_Plan" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </TextBlock.Visibility>
+                                    <TextBlock.Text>
+                                        <MultiBinding Mode="OneWay" Converter="{StaticResource NotNeedDateTimeConverter}" ConverterParameter="-">
+                                            <Binding Path="Is_WH_G_NotNeed"/>
+                                            <Binding Path="Time_WH_G_Plan"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+
+                                <Button Margin="2" Tag="{Binding}" VerticalAlignment="Center" 
+                                        Click="btnSet_Time_WH_G_Plan_Click">
+                                    <Button.Background>
+                                        <MultiBinding Converter="{StaticResource IsManagerSetPlanDateToBrushSourceConverter}">
+                                            <Binding Path="IsManagerSetPlanDate" Mode="OneWay"/>
+                                            <Binding Path="Time_WH_G_Plan" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </Button.Background>
+                                    <Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource TimePlanStateToVisibilityConverter}">
+                                            <Binding Path="IsManagerSetPlanDate" Mode="OneWay"/>
+                                            <Binding Path="Is_WH_G_NotNeed" Mode="OneWay"/>
+                                            <Binding Path="Time_WH_G_Plan" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </Button.Visibility>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <local:GreyableImage Grid.Column="0" Width="16" Height="16" Source="/ProjectControlSystem;component/Images/calendar.png"  Margin="-2"/>
+                                        <TextBlock Grid.Column="1" Margin="5,0,0,0" Text="{Binding Path=Time_WH_G_Plan, Converter={StaticResource DateTimeConverter}, Mode=OneWay}"/>
+                                    </Grid>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+                <!--Гидравлические (факт)-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="110" CanUserSort="True" SortMemberPath="Time_WH_G_Actual">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Гидравлика (факт)" TextWrapping="Wrap" TextAlignment="Center" Width="100" FontWeight="Bold" FontSize="11"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid IsEnabled="{Binding Path=CurrentUser, Converter={StaticResource UserToBoolConverter}, ConverterParameter=8, Mode=OneWay}"
+                                  VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" TextAlignment="Center" VerticalAlignment="Center" >
+                                    <TextBlock.Text>
+                                        <MultiBinding Mode="OneWay" Converter="{StaticResource NotNeedDateTimeConverter}">
+                                            <Binding Path="Is_WH_G_NotNeed"/>
+                                            <Binding Path="Time_WH_G_Actual"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+
+                                <Button Grid.Column="1" Margin="2" Tag="{Binding}" VerticalAlignment="Center"
+                                        Background="{Binding Path=Requests, ConverterParameter=g, Converter={StaticResource RequestToBrushConverter}, Mode=OneWay}"
+                                        Visibility="{Binding Path=Requests, ConverterParameter=g, Converter={StaticResource RequestToVisibilityConverter}, Mode=OneWay}"
+                                        Click="btnWH_G_Request_Click">
+                                    <Image Source="/ProjectControlSystem;component/Images/box.png"  Width="16" Height="16"/>
+                                </Button>
+
+                                <!--IsEnabled="{Binding Path=Time_ITO_G_Actual, Converter={StaticResource NullDateTimeToFalseConverter}, Mode=OneWay}"-->
+                                <Button Grid.ColumnSpan="2" Margin="2" Tag="{Binding}" VerticalAlignment="Center" Content="----" 
+                                        Background="{Binding Path=Requests, ConverterParameter=g, Converter={StaticResource RequestToBrushConverter}, Mode=OneWay}"
+                                        Visibility="{Binding Path=Time_WH_G_Actual, Converter={StaticResource NullToVisibleSourceConverter}, Mode=OneWay}"  
+                                        Click="btnWH_G_Complete_Click">
+                                    <Button.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Недокомплект" Tag="{Binding}"
+                                                      Click="btnWH_G_Request_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Source="/ProjectControlSystem;component/Images/box.png"  Width="16" Height="16"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+
+                                            <Separator/>
+
+                                            <MenuItem Header="Не требуется" Tag="{Binding}"
+                                                      Click="mnuWH_G_NotNeed_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Width="18" Height="18" Source="/ProjectControlSystem;component/Images/down.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+
+                                <!--Время создания недокомплекта-->
+                                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="2" 
+                                           Text="{Binding Path=Time_WH_G_Requests_Create, Converter={StaticResource DateTimeConverter}, Mode=OneWay}" 
+                                           Visibility="{Binding Path=Time_WH_G_Requests_Create, Converter={StaticResource NullDateTimeToCollapseConverter}, Mode=OneWay}"
+                                           TextAlignment="Center" VerticalAlignment="Center" FontSize="10" FontStyle="Oblique"/>
+
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Электрика (план)-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="110" CanUserSort="True" SortMemberPath="Time_WH_E_Plan">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Электрика (план)" TextWrapping="Wrap" TextAlignment="Center" Width="100" />
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid IsEnabled="{Binding Path=CurrentUser, Converter={StaticResource UserToBoolConverter}, ConverterParameter=8, Mode=OneWay}">
+                                <TextBlock Width="90" TextAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock.Visibility>
+                                        <MultiBinding Converter="{StaticResource TimePlanStateToVisibilityConverter}" ConverterParameter="invert">
+                                            <Binding Path="IsManagerSetPlanDate" Mode="OneWay"/>
+                                            <Binding Path="Is_WH_E_NotNeed" Mode="OneWay"/>
+                                            <Binding Path="Time_WH_E_Plan" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </TextBlock.Visibility>
+                                    <TextBlock.Text>
+                                        <MultiBinding Mode="OneWay" Converter="{StaticResource NotNeedDateTimeConverter}" ConverterParameter="-">
+                                            <Binding Path="Is_WH_E_NotNeed"/>
+                                            <Binding Path="Time_WH_E_Plan"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+
+                                <Button Margin="2" Tag="{Binding}" VerticalAlignment="Center" 
+                                        Click="btnSet_Time_WH_E_Plan_Click">
+                                    <Button.Background>
+                                        <MultiBinding Converter="{StaticResource IsManagerSetPlanDateToBrushSourceConverter}">
+                                            <Binding Path="IsManagerSetPlanDate" Mode="OneWay"/>
+                                            <Binding Path="Time_WH_E_Plan" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </Button.Background>
+                                    <Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource TimePlanStateToVisibilityConverter}">
+                                            <Binding Path="IsManagerSetPlanDate" Mode="OneWay"/>
+                                            <Binding Path="Is_WH_E_NotNeed" Mode="OneWay"/>
+                                            <Binding Path="Time_WH_E_Plan" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </Button.Visibility>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <local:GreyableImage Grid.Column="0" Width="16" Height="16" Source="/ProjectControlSystem;component/Images/calendar.png"  Margin="-2"/>
+                                        <TextBlock Grid.Column="1" Margin="5,0,0,0" Text="{Binding Path=Time_WH_E_Plan, Converter={StaticResource DateTimeConverter}, Mode=OneWay}"/>
+                                    </Grid>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+                <!--Электрика (факт)-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="110" CanUserSort="True" SortMemberPath="Time_WH_E_Actual">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Электрика (факт)" TextWrapping="Wrap" TextAlignment="Center" Width="100" FontWeight="Bold" FontSize="11"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid IsEnabled="{Binding Path=CurrentUser, Converter={StaticResource UserToBoolConverter}, ConverterParameter=8, Mode=OneWay}"
+                                  VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Width="90" TextAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock.Text>
+                                        <MultiBinding Mode="OneWay" Converter="{StaticResource NotNeedDateTimeConverter}">
+                                            <Binding Path="Is_WH_E_NotNeed"/>
+                                            <Binding Path="Time_WH_E_Actual"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+
+                                <Button Grid.Column="1" Margin="2" Tag="{Binding}" VerticalAlignment="Center"
+                                        Background="{Binding Path=Requests, ConverterParameter=e, Converter={StaticResource RequestToBrushConverter}, Mode=OneWay}"
+                                        Visibility="{Binding Path=Requests, ConverterParameter=e, Converter={StaticResource RequestToVisibilityConverter}, Mode=OneWay}"
+                                        Click="btnWH_E_Request_Click">
+                                    <Image Source="/ProjectControlSystem;component/Images/box.png"  Width="16" Height="16"/>
+                                </Button>
+
+                                <!--IsEnabled="{Binding Path=Time_ITO_E_Actual, Converter={StaticResource NullDateTimeToFalseConverter}, Mode=OneWay}"-->
+                                <Button Grid.ColumnSpan="2" Margin="2" Tag="{Binding}" VerticalAlignment="Center" Content="----" 
+                                        Background="{Binding Path=Requests, ConverterParameter=e, Converter={StaticResource RequestToBrushConverter}, Mode=OneWay}"
+                                        Visibility="{Binding Path=Time_WH_E_Actual, Converter={StaticResource NullToVisibleSourceConverter}, Mode=OneWay}"
+                                        Click="btnWH_E_Complete_Click">
+                                    <Button.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Недокомплект" Tag="{Binding}"
+                                                      Click="btnWH_E_Request_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Source="/ProjectControlSystem;component/Images/box.png"  Width="16" Height="16"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+
+                                            <Separator/>
+
+                                            <MenuItem Header="Не требуется" Tag="{Binding}"
+                                                      Click="mnuWH_E_NotNeed_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Width="18" Height="18" Source="/ProjectControlSystem;component/Images/down.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+
+                                <!--Время создания недокомплекта-->
+                                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="2" 
+                                           Text="{Binding Path=Time_WH_E_Requests_Create, Converter={StaticResource DateTimeConverter}, Mode=OneWay}" 
+                                           Visibility="{Binding Path=Time_WH_E_Requests_Create, Converter={StaticResource NullDateTimeToCollapseConverter}, Mode=OneWay}"
+                                           TextAlignment="Center" VerticalAlignment="Center" FontSize="10" FontStyle="Oblique"/>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Рама (план)-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="110" CanUserSort="True" SortMemberPath="Time_WH_R_Plan">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Рама (план)" TextWrapping="Wrap" TextAlignment="Center" Width="100"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid IsEnabled="{Binding Path=CurrentUser, Converter={StaticResource UserToBoolConverter}, ConverterParameter=8, Mode=OneWay}">
+                                <TextBlock Width="90" TextAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock.Visibility>
+                                        <MultiBinding Converter="{StaticResource TimePlanStateToVisibilityConverter}" ConverterParameter="invert">
+                                            <Binding Path="IsManagerSetPlanDate" Mode="OneWay"/>
+                                            <Binding Path="Is_WH_R_NotNeed" Mode="OneWay"/>
+                                            <Binding Path="Time_WH_R_Plan" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </TextBlock.Visibility>
+
+                                    <TextBlock.Text>
+                                        <MultiBinding Mode="OneWay" Converter="{StaticResource NotNeedDateTimeConverter}" ConverterParameter="-">
+                                            <Binding Path="Is_WH_R_NotNeed"/>
+                                            <Binding Path="Time_WH_R_Plan"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+
+                                <Button Margin="2" Tag="{Binding}" VerticalAlignment="Center" 
+                                        Click="btnSet_Time_WH_R_Plan_Click">
+                                    <Button.Background>
+                                        <MultiBinding Converter="{StaticResource IsManagerSetPlanDateToBrushSourceConverter}">
+                                            <Binding Path="IsManagerSetPlanDate" Mode="OneWay"/>
+                                            <Binding Path="Time_WH_R_Plan" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </Button.Background>
+                                    <Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource TimePlanStateToVisibilityConverter}">
+                                            <Binding Path="IsManagerSetPlanDate" Mode="OneWay"/>
+                                            <Binding Path="Is_WH_R_NotNeed" Mode="OneWay"/>
+                                            <Binding Path="Time_WH_R_Plan" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </Button.Visibility>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <local:GreyableImage Grid.Column="0" Width="16" Height="16" Source="/ProjectControlSystem;component/Images/calendar.png"  Margin="-2"/>
+                                        <TextBlock Grid.Column="1" Margin="5,0,0,0" Text="{Binding Path=Time_WH_R_Plan, Converter={StaticResource DateTimeConverter}, Mode=OneWay}"/>
+                                    </Grid>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+                <!--Рама (факт)-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="110" CanUserSort="True" SortMemberPath="Time_WH_R_Actual">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Рама (факт)" TextWrapping="Wrap" TextAlignment="Center" Width="100" FontWeight="Bold" FontSize="11"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid IsEnabled="{Binding Path=CurrentUser, Converter={StaticResource UserToBoolConverter}, ConverterParameter=8, Mode=OneWay}">
+
+                                <TextBlock Width="90" TextAlignment="Center" VerticalAlignment="Center"   >
+                                    <TextBlock.Text>
+                                        <MultiBinding Mode="OneWay" Converter="{StaticResource NotNeedDateTimeConverter}">
+                                            <Binding Path="Is_WH_R_NotNeed"/>
+                                            <Binding Path="Time_WH_R_Actual"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+
+                                <Button Margin="2"  Tag="{Binding}" VerticalAlignment="Center" Content="----"
+                                        Visibility="{Binding Path=Time_WH_R_Actual, Converter={StaticResource NullToVisibleSourceConverter}, Mode=OneWay}" 
+                                        IsEnabled="{Binding Path=Time_ITO_R_Actual, Converter={StaticResource NullDateTimeToFalseConverter}, Mode=OneWay}"
+                                        Click="btnWH_R_Complete_Click">
+                                    <Button.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Не требуется" Tag="{Binding}"
+                                                      Click="mnuWH_R_NotNeed_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Width="18" Height="18" Source="/ProjectControlSystem;component/Images/down.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Планируемая дата отгрузки-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="110"
+                                                CanUserSort="True" SortMemberPath="TimeEndPlaned">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Планируемая дата отгрузки" TextWrapping="Wrap" TextAlignment="Center" Width="100" />
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="2" 
+                                       Text="{Binding Path=TimeEndPlaned, Converter={StaticResource DateTimeConverter}, Mode=OneWay}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="True">
+                                                <Setter Property="FontWeight" Value="Black"/>
+                                                <Setter Property="Foreground" Value="Red"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="FontWeight" Value="Normal"/>
+                                                <Setter Property="Foreground" Value="Black"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Ориентировочная дата готовности-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="120"
+                                                CanUserSort="True" SortMemberPath="MF_Time_Plan">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Ориентировочная дата готовности" TextWrapping="Wrap" TextAlignment="Center" Width="110" />
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="2" 
+                                       Text="{Binding Path=MF_Time_Plan, Converter={StaticResource DateTimeConverter}, Mode=OneWay}"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Дата фактической отгрузки-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="110" CanUserSort="True" SortMemberPath="TimeEndActual">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Фактическая дата отгрузки" TextWrapping="Wrap" TextAlignment="Center" Width="100" FontWeight="Black"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid IsEnabled="{Binding Path=CurrentUser, Converter={StaticResource UserToBoolConverter}, ConverterParameter=8, Mode=OneWay}">
+                                <TextBlock Width="90" TextAlignment="Center" VerticalAlignment="Center" 
+                                           Text="{Binding Path=TimeEndActual, Converter={StaticResource DateTimeConverter}, Mode=OneWay}"  />
+                                <Button Margin="2" Tag="{Binding}"  VerticalAlignment="Center" Content="----"
+                                        Visibility="{Binding Path=TimeEndActual, Converter={StaticResource NullToVisibleSourceConverter}, Mode=OneWay}"  
+                                        IsEnabled="{Binding Path=IsCanCompleteProject, Mode=OneWay}"
+                                        Click="btnComplete_Click">
+                                    <!--<Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Image Grid.Column="0" Width="16" Height="16" Source="/ProjectControlSystem;component/Images/ok.png"  Margin="-2"/>
+                                        <TextBlock Grid.Column="1" Margin="5,0,0,0" Text="Готово" FontSize="12"/>
+                                    </Grid>-->
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Тип упаковки-->
+                <toolkit:DataGridTemplateColumn Header="Упаковка" MinWidth="50" SortMemberPath="COM_Package_Type" CanUserSort="True" >
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=COM_Package_Type, Mode=OneWay}"  TextAlignment="Center" VerticalAlignment="Center" Margin="3"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Коментарии-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="Auto">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="" TextWrapping="Wrap" TextAlignment="Center" />
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Margin="2" Tag="{Binding}" VerticalAlignment="Center"
+                                    Click="btnComment_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Grid.Column="0" Width="16" Height="16" Source="/ProjectControlSystem;component/Images/book_blue.png"  Margin="-2" />
+                                    <TextBlock Grid.Column="1"  Text="{Binding Path=Messages.Count, Mode=OneWay}" FontSize="12" Margin="5,0"/>
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+            </local:CustomDataGrid.Columns>
+        </local:CustomDataGrid>
+    </Grid>
+</UserControl>

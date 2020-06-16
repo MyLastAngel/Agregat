@@ -1,0 +1,31 @@
+﻿<Window x:Class="ProjectControlSystem.Windows.AlarmWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ProjectControlSystem"
+        Title="AlarmWindow" AllowsTransparency="True" WindowStartupLocation="Manual" WindowStyle="None" Background="Transparent" SizeToContent="WidthAndHeight" 
+        ShowInTaskbar="False" Topmost="True" ShowActivated="True" ResizeMode="NoResize">
+
+    <Window.Resources>
+        <local:DateTimeConverter x:Key="DateTimeConverter"/>
+    </Window.Resources>
+
+    <Border CornerRadius="5" BorderBrush="Red" BorderThickness="2">
+        <Button Margin="5" Focusable="False"
+                Click="btnShowMain_Click">
+            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="400" Height="170">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <TextBlock Text="{Binding Path=Date, Converter={StaticResource DateTimeConverter}, Mode=OneWay}" TextWrapping="Wrap" FontSize="16" FontWeight="Black" 
+                           TextAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                </Grid>
+                
+                <TextBlock Grid.Row="1" Text="{Binding Path=Message, Mode=OneWay}" TextWrapping="Wrap" FontSize="20" Foreground="Red" FontWeight="Black" 
+                           TextAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+        </Button>
+    </Border>
+</Window>

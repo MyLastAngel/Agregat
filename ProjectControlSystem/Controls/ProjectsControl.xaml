@@ -1,0 +1,474 @@
+﻿<UserControl x:Class="ProjectControlSystem.Controls.ProjectsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+             xmlns:local="clr-namespace:ProjectControlSystem"
+             mc:Ignorable="d" >
+
+    <UserControl.Resources>
+        <local:DateTimeConverter x:Key="DateTimeConverter"/>
+        <local:TimeConverter x:Key="TimeConverter"/>
+        <local:BoolToBrushSourceConverter x:Key="BoolToBrushSourceConverter"/>
+        <local:BoolToStringSourceConverter x:Key="BoolToStringSourceConverter"/>
+
+        <local:StateToBitmapSourceConverter x:Key="StateToBitmapSourceConverter"/>
+    </UserControl.Resources>
+
+    <Grid Background="White">
+
+        <local:CustomDataGrid x:Name="listProjects" AutoGenerateColumns="False" AlternatingRowBackground="#4CD3D3D3" CanUserAddRows="False"
+                                  CanUserDeleteRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False" Background="White" 
+                                  HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray"  HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Auto"
+                                  CanUserResizeRows="False" RowHeaderWidth="0" SelectionMode="Single" SelectionUnit="FullRow" Focusable="False"
+                                  EnableColumnVirtualization="False" EnableRowVirtualization="True"
+                                  ScrollViewer.ScrollChanged="listProjects_ScrollChanged"
+                                  SourceUpdated="listProjects_SourceUpdated">
+
+            <local:CustomDataGrid.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/Resources/DataGridResources.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </local:CustomDataGrid.Resources>
+
+            <local:CustomDataGrid.Columns>
+                <!--№ Проекта-->
+                <toolkit:DataGridTextColumn Header="№" Binding="{Binding Path=ID, Mode=OneWay}" IsReadOnly="True" 
+                                            FontSize="18" FontWeight="Black" MinWidth="50" 
+                                            CellStyle="{ StaticResource styleCellConst}" HeaderStyle="{ StaticResource styleHeaderConst}"/>
+
+                <!--Контрагент-->
+                <toolkit:DataGridTemplateColumn Header="Контрагент" CellStyle="{ StaticResource styleCellConst}" HeaderStyle="{ StaticResource styleHeaderConst}" Width="120"
+                                                        CanUserSort="True" SortMemberPath="Customer">
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Grid.Row="2" Text="{Binding Path=Customer, Mode=OneWay}" HorizontalAlignment="Stretch" TextAlignment="Center" 
+                                               MaxWidth="120" VerticalAlignment="Center" TextWrapping="Wrap" Margin="3,0" FontSize="11" FontWeight="Black"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Проект-->
+                <toolkit:DataGridTemplateColumn Header="Проект" CellStyle="{ StaticResource styleCellConst}" HeaderStyle="{ StaticResource styleHeaderConst}" Width="120"
+                                                        CanUserSort="True" SortMemberPath="CustomerName">
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Grid.Row="2" Text="{Binding Path=CustomerName, Mode=OneWay}" HorizontalAlignment="Stretch" TextAlignment="Center" 
+                                               MaxWidth="120" VerticalAlignment="Center" TextWrapping="Wrap" Margin="3,0" FontSize="11" FontWeight="Black"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Изделие-->
+                <toolkit:DataGridTemplateColumn Header="Изделие" CellStyle="{ StaticResource styleCellConst}" HeaderStyle="{ StaticResource styleHeaderConst}" Width="150"
+                                                        CanUserSort="True" SortMemberPath="Product">
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Grid.Row="2" Text="{Binding Path=Product, Mode=OneWay}" HorizontalAlignment="Stretch" TextAlignment="Center" 
+                                               MaxWidth="150" VerticalAlignment="Center" TextWrapping="Wrap" Margin="3,0" FontSize="11" FontWeight="Black"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Опции-->
+                <toolkit:DataGridTemplateColumn Header="Опции" CellStyle="{ StaticResource styleCellConst}" HeaderStyle="{ StaticResource styleHeaderConst}" 
+                                                        Width="150" CanUserSort="True" SortMemberPath="Options">
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Grid.Row="2" Text="{Binding Path=Options, Mode=OneWay}" HorizontalAlignment="Stretch" TextAlignment="Center" 
+                                               MaxWidth="150" VerticalAlignment="Center" TextWrapping="Wrap" Margin="3,0" FontSize="11"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+
+                <!--Коммерческий отдел-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="90" >
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Коммерческий отдел" TextWrapping="Wrap" TextAlignment="Center" Width="80" FontSize="10"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <!--<Image Width="24" Height="24" Source="{Binding Path=IsCommercialDepartamentOk, Converter={StaticResource StateToBitmapSourceConverter}, Mode=OneWay}" Name="test"
+                                           Cursor="Hand"/>-->
+                            <Grid Background="{Binding Path=IsCommercialDepartamentOk, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--ИТО Гидравлика-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="80">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="" TextAlignment="Center"/>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Гидравлика" TextAlignment="Center" Width="70" FontSize="10"/>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=Is_ITO_G_Ok, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <!--<Image Width="24" Height="24" Source="{Binding Path=Is_ITO_G_Ok, Converter={StaticResource StateToBitmapSourceConverter}, Mode=OneWay}" Name="test"
+                                             Cursor="Hand"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+                <!--ИТО Электрика-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="80">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="" TextAlignment="Center"/>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Электрика" TextAlignment="Center" Width="70" FontSize="10"/>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=Is_ITO_E_Ok, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <!--<Image Width="24" Height="24" Source="{Binding Path=Is_ITO_E_Ok, Converter={StaticResource StateToBitmapSourceConverter}, Mode=OneWay}" Name="test"
+                                            Cursor="Hand"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+                <!--ИТО Чертеж на раму-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="80">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="" TextAlignment="Center"/>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Чертеж на раму" TextAlignment="Center"  Width="70" FontSize="10" TextWrapping="Wrap"/>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=Is_ITO_R_Ok, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <!--<Image Width="24" Height="24" Source="{Binding Path=Is_ITO_R_Ok, Converter={StaticResource StateToBitmapSourceConverter}, Mode=OneWay}" Name="test"
+                                          Cursor="Hand"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--СКЛАД гидравлика-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="80">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="" TextAlignment="Center"/>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Гидравлика" TextAlignment="Center" Width="70" FontSize="10"/>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=Is_WH_G_Ok, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <!--<Image Width="24" Height="24" Source="{Binding Path=Is_WH_G_Ok, Converter={StaticResource StateToBitmapSourceConverter}, Mode=OneWay}" Name="test"
+                                             Cursor="Hand"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+                <!--СКЛАД Электрика-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="80">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="" TextAlignment="Center"/>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Электрика" TextAlignment="Center"  Width="70" FontSize="10"/>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=Is_WH_E_Ok, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <!--<Image Width="24" Height="24" Source="{Binding Path=Is_WH_E_Ok, Converter={StaticResource StateToBitmapSourceConverter}, Mode=OneWay}" Name="test"
+                                            Cursor="Hand"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+                <!--СКЛАД Рама-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="80">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="" TextAlignment="Center"/>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Рама" TextAlignment="Center"  Width="70" FontSize="10"/>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=Is_WH_R_Ok, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <!--<Image Width="24" Height="24" Source="{Binding Path=Is_WH_R_Ok, Converter={StaticResource StateToBitmapSourceConverter}, Mode=OneWay}" Name="test"
+                                            Cursor="Hand"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--ОМТС гидравлика-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="80">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="" TextAlignment="Center"/>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Гидравлика" TextAlignment="Center" Width="70" FontSize="10"/>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=Is_OMTS_G_Ok, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <!--<Image Width="24" Height="24" Source="{Binding Path=Is_OMTS_G_Ok, Converter={StaticResource StateToBitmapSourceConverter}, Mode=OneWay}" Name="test"
+                                            Cursor="Hand"
+                                            MouseLeftButtonDown="test_MouseLeftButtonDown"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+                <!--ОМТС Электрика-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="80">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="" TextAlignment="Center"/>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Электрика" TextAlignment="Center" Width="70" FontSize="10"/>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=Is_OMTS_E_Ok, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <!--<Image Width="24" Height="24" Source="{Binding Path=Is_OMTS_E_Ok, Converter={StaticResource StateToBitmapSourceConverter}, Mode=OneWay}" Name="test"
+                                          Cursor="Arrow"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Производство-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="90">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Производство" TextWrapping="Wrap" TextAlignment="Center" Width="80" FontSize="10"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=IsManufactureDepartamentOk, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <!--<Image Width="24" Height="24" Source="{Binding Path=IsManufactureDepartamentOk, Converter={StaticResource StateToBitmapSourceConverter}, Mode=OneWay}" Name="test"
+                                          Cursor="Hand"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+                <!--ОТК-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="80">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="ОТК" TextWrapping="Wrap" TextAlignment="Center" Width="70" FontSize="10"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=IsOTKDepartamentOk, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <!--<Image Width="24" Height="24" Source="{Binding Path=IsOTKDepartamentOk, Converter={StaticResource StateToBitmapSourceConverter}, Mode=OneWay}" Name="test"
+                                        Cursor="Hand"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--ДОЛГИ  гидравлике-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="80"
+                                                        CanUserSort="True" SortMemberPath="IsDebt_G_None">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="" TextAlignment="Center"/>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Гидравлика" TextAlignment="Center"  Width="70" FontSize="10"/>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=IsDebt_G_None, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <TextBlock Grid.Column="0" Grid.Row="1" TextAlignment="Center"  Width="60"
+                                               Text="{Binding Path=IsDebt_G_None, Converter={StaticResource BoolToStringSourceConverter}, Mode=OneWay}" >
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="Да">
+                                                    <Setter Property="Foreground" Value="Red"/>
+                                                </Trigger>
+                                                <Trigger Property="Text" Value="Нет">
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+                <!--ДОЛГИ электрике-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="80"
+                                                        CanUserSort="True" SortMemberPath="IsDebt_E_None">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="" TextAlignment="Center"/>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Электрика" TextAlignment="Center"  Width="70" FontSize="10"/>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding Path=IsDebt_E_None, Converter={StaticResource BoolToBrushSourceConverter}, Mode=OneWay}">
+                                <TextBlock Grid.Column="0" Grid.Row="1" TextAlignment="Center"  Width="60" 
+                                               Text="{Binding Path=IsDebt_E_None, Converter={StaticResource BoolToStringSourceConverter}, Mode=OneWay}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="Да">
+                                                    <Setter Property="Foreground" Value="Red"/>
+                                                </Trigger>
+                                                <Trigger Property="Text" Value="Нет">
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Дата отгрузки план-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="100" TextBlock.TextAlignment="Center" 
+                                                        CanUserSort="True" SortMemberPath="TimeEndPlaned">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Дата отгрузки план" TextWrapping="Wrap" TextAlignment="Center" Width="90"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=TimeEndPlaned, Converter={StaticResource DateTimeConverter}, Mode=OneWay}"  Width="90" TextAlignment="Center" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+                <!--Дата отгрузки факт-->
+                <toolkit:DataGridTemplateColumn IsReadOnly="True" Width="100" TextBlock.TextAlignment="Center"
+                                                        CanUserSort="True" SortMemberPath="TimeEndActual">
+                    <toolkit:DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Дата отгрузки факт" TextWrapping="Wrap" TextAlignment="Center" Width="90"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.HeaderTemplate>
+                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=TimeEndActual, Converter={StaticResource DateTimeConverter}, Mode=OneWay}"  Width="90" TextAlignment="Center" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                </toolkit:DataGridTemplateColumn>
+
+            </local:CustomDataGrid.Columns>
+        </local:CustomDataGrid>
+
+        <Grid Name="gridDoubleHeaderControls">
+            <!--ИТО-->
+            <Border BorderBrush="LightGray" BorderThickness="0" Margin="685,1,10,1" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <TextBlock   Text="ИТО" FontWeight="Bold" Width="230"  TextAlignment="Center" Background="White"/>
+            </Border>
+            <!--Склад-->
+            <Border BorderBrush="LightGray" BorderThickness="0" Margin="925,1,10,2" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <TextBlock VerticalAlignment="Top" Text="Склад" FontWeight="Bold" Width="229"  TextAlignment="Center"  Background="White"/>
+            </Border>
+            <!--ОМТС-->
+            <Border BorderBrush="LightGray" BorderThickness="0" Margin="1165,1,10,2" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <TextBlock VerticalAlignment="Top" Text="ОМТС" FontWeight="Bold" Width="149"  TextAlignment="Center"  Background="White"/>
+            </Border>
+            <!--Долги-->
+            <Border BorderBrush="LightGray" BorderThickness="0" Margin="1495,1,10,2" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <TextBlock VerticalAlignment="Top" Text="Долги" FontWeight="Bold" Width="149"  TextAlignment="Center"  Background="White"/>
+            </Border>
+        </Grid>
+
+    </Grid>
+</UserControl>
